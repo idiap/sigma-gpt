@@ -31,6 +31,29 @@ This repository is based on the following codebases:
 - NanoGPT [https://github.com/karpathy/nanoGPT](https://github.com/karpathy/nanoGPT)
   - With an additionnal KV cache implementation from Vincent Micheli and Eloi Alonso, from the IRIS codebase [https://github.com/eloialonso/iris](https://github.com/eloialonso/iris)
 
+## One-Liner
+
+Detailed instructions are provided below, but here are some one-liners to get you started:
+It should work given that the environment is set up correctly.
+More details are provided in the following sections.
+
+**Install and text modeling on CPU**:
+```bash
+git clone git@github.com:idiap/sigma-gpt.git
+cd sigma-gpt
+git submodule update --init --recursive
+cd text
+(cd nanoGPT/data/shakespeare_char/; python prepare.py)
+python train.py nanoGPT/config/train_shakespeare_char.py --max_iters=20000 --device=cpu 
+```
+
+Then you can evaluate the model with:
+```bash 
+python sample.py nanoGPT/config/train_shakespeare_char.py --device=cpu --max_tokens=255 --verbose=True
+```
+(remove the `--device=cpu` if you have a GPU, it should work with `mps` on recent Mac as well)
+
+
 ## Installation
 
 The implementation is adapted from two well-known codebases: `picoclvr` from François Fleuret and `nanoGPT` from Andrej Karpathy. We organized the code so that the two codebases are imported as submodules.
@@ -58,7 +81,21 @@ conda env create -n sigma-gpt -f environment.yml
 
 ### Text modelling
 
-For testing the model with a fast training and evaluation on CPU, you can use the Shakespeare dataset. The model is trained on the character level.
+For testing the model with fast training and evaluation on CPU, you can use the Shakespeare dataset. The model is trained on the character level.
+
+First, go to the text folder:
+
+```bash
+cd text
+```
+
+And prepare the dataset:
+```bash
+(cd nanoGPT/data/shakespeare_char/; python prepare.py)
+```
+
+Then you can train with (remove the `--device=cpu` if you have a GPU, it should work with `mps` on recent Mac as well)
+
 
 ```bash
 python train.py nanoGPT/config/train_shakespeare_char.py --device=cpu
@@ -67,10 +104,10 @@ Evaluation:
 ```bash
 python sample.py nanoGPT/config/train_shakespeare_char.py --device=cpu --max_tokens=255 --verbose=True
 ```
-with verbose set to True you can see the generation on the terminal.
+with verbose set to `True` you can see the generation on the terminal.
 
 
-For larger pipeline you can try:
+For larger pipelines, you can try:
 
 Training:
 ```bash
@@ -86,14 +123,19 @@ python sample.py
 These commands train the model and output results for each epoch.
 `main.py` contains many arguments that can be adapted to change the dataset, model size, number of layers, results folder, etc.
 
+First, go to the non-nlp folder:
+
+```bash
+cd non-nlp
+```
 **Maze**:
 ```bash
-python main.py --task maze
+python main.py --task maze --training_strategy="shuffle"
 ```
 
 **Vertical**:
 ```bash
-python main.py --task vertical
+python main.py --task vertical --training_strategy="shuffle"
 ```
 
 N.B: the air traffic dataset is not publicly available yet, the procedure is ongoing, and the dataset will be available soon. Reach out to the author for more information.
