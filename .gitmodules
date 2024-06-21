@@ -1,0 +1,11 @@
+# Copyright © <2023> Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Arnaud Pannatier <arnaud.pannatier@idiap.ch>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+[submodule "non-nlp/picoclvr"]
+	path = non-nlp/picoclvr
+	url = https://fleuret.org/git/picoclvr
+[submodule "text/nanoGPT"]
+	path = text/nanoGPT
+	url = git@github.com:karpathy/nanoGPT.git

@@ -1,0 +1,21 @@
+# Copyright © <2023> Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Arnaud Pannatier <arnaud.pannatier@idiap.ch>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+name: sigma-gpt
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch::pytorch=2.0 # BSD-3-Clause, https://pytorch.org/
+  - pytorch::torchvision # BSD-3-Clause, https://pytorch.org/vision/
+  - pytorch::pytorch-cuda=11.7 # BSD-3-Clause, https://pytorch.org/
+  - nvidia::cuda=11.7 # BSD-3-Clause, https://pytorch.org/
+  - black # MIT, https://github.com/psf/black
+  - tqdm # MIT, https://github.com/tqdm/tqdm
+  - matplotlib # PSF-based, https://matplotlib.org/
+  - pandas # BSD-3-Clause, https://pandas.pydata.org/
+  - pre-commit # MIT, https://pre-commit.com/
+  - conda-forge::einops # MIT, https://github.com/arogozhnikov/einops
+  - cairo # LGPL-2.1, https://www.cairographics.org/ picoclvr dependency
+  - conda-forge::tiktoken # MIT https://github.com/openai/tiktoken nanoGPT dependency

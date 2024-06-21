@@ -1,0 +1,11 @@
+# Copyright © <2023> Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Arnaud Pannatier <arnaud.pannatier@idiap.ch>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+__pycache__/
+data/
+logs/
+*.sh
+results*/
+out*/

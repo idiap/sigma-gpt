@@ -1,0 +1,56 @@
+# Copyright © <2023> Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Arnaud Pannatier <arnaud.pannatier@idiap.ch>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+fail_fast: true
+
+repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [--max-line-length=120, "--per-file-ignores=__init__.py:F401,test*.py:D103,D100,import_*.py:E402", --extend-ignore=E203]
+        additional_dependencies:
+          - flake8-docstrings>=1.6.0
+          - flake8-bugbear>=21.4.3
+          - flake8-comprehensions>=3.6.1
+          - flake8-logging-format>=0.6.0
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.4
+    hooks:
+      - id: bandit
+        args: ["--skip", "B101,B102,B301,B403"]
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        args:
+        - --match='(?!.*grpc\.py$).*\.py$'
+  # - repo: https://github.com/kynan/nbstripout
+  #   rev: 0.6.1
+  #   hooks:
+  #     - id: nbstripout
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: check-case-conflict
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+    exclude: non-nlp/picoclvr/
+  #    - id: check-added-large-files
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v1.1.2
+    hooks:
+    - id: reuse
