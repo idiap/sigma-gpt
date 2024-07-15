@@ -359,7 +359,7 @@ class SigmaGPT(nn.Module):
             return
 
         for c in self.all_caches():
-            c = torch.repeat_interleave(c, n, 0)
+            c.set_(torch.repeat_interleave(c, n, 0))
         self.resetable = True
 
     def select_sample_from_cache(self, index):
@@ -368,7 +368,7 @@ class SigmaGPT(nn.Module):
         Typically used to remove the samples that have been fully generated.
         """
         for c in self.all_caches():
-            c = c[index]
+            c.set_(c[index])
 
     def reshape_cache_and_select(self, b, n, amax):
         """Reshape the cache and select the samples.
@@ -379,13 +379,13 @@ class SigmaGPT(nn.Module):
             return
 
         for c in list(self.cache_ys()) + list(self.cache_pe()):
-            c = c.reshape(b, n, -1, c.size(-1))
-            c = c.take_along_dim(amax[..., None, None], 1).squeeze(1)
+            c.set_(c.reshape(b, n, -1, c.size(-1)))
+            c.set_(c.take_along_dim(amax[..., None, None], 1).squeeze(1))
 
         for c in list(self.cache_ks()) + list(self.cache_vs()):
             _, h, t, e = c.size()
-            c = c.reshape(b, n, h, t, e)
-            c = c.take_along_dim(amax[..., None, None, None], 1).squeeze(1)
+            c.set_(c.reshape(b, n, h, t, e))
+            c.set_(c.take_along_dim(amax[..., None, None, None], 1).squeeze(1))
         self.resetable = False
 
     def forward(self, bs, mode="standard", order=None, burst=False):
