@@ -44,11 +44,11 @@ cd sigma-gpt
 git submodule update --init --recursive
 cd text
 (cd nanoGPT/data/shakespeare_char/; python prepare.py)
-python train.py nanoGPT/config/train_shakespeare_char.py --max_iters=20000 --device=cpu 
+python train.py nanoGPT/config/train_shakespeare_char.py --max_iters=20000 --device=cpu
 ```
 
 Then you can evaluate the model with:
-```bash 
+```bash
 python sample.py nanoGPT/config/train_shakespeare_char.py --device=cpu --max_tokens=255 --verbose=True
 ```
 (remove the `--device=cpu` if you have a GPU, it should work with `mps` on recent Mac as well)

@@ -17,5 +17,6 @@ dependencies:
   - pandas # BSD-3-Clause, https://pandas.pydata.org/
   - pre-commit # MIT, https://pre-commit.com/
   - conda-forge::einops # MIT, https://github.com/arogozhnikov/einops
+  - conda-forge::pytest # MIT, https://docs.pytest.org/en/latest/
   - cairo # LGPL-2.1, https://www.cairographics.org/ picoclvr dependency
   - conda-forge::tiktoken # MIT https://github.com/openai/tiktoken nanoGPT dependency

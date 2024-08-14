@@ -240,21 +240,42 @@ class CausalSelfAttention(model.CausalSelfAttention):
             kv_cache.update(k, v)
             k, v = kv_cache.get()
 
-        # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
+        y = self.manual_self_attention(q, k, v, L, T)
+        # re-assemble all head outputs side by side
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
+
+        # output projection
+        y = self.resid_dropout(self.c_proj(y))
+        return y
         # manual implementation of attention
+
+    def manual_self_attention(self, q, k, v, L, T):
+        """Manual implementation of the self-attention.
+
+        Flash attention with is_causal=True fails with cache because it takes the wrong mask.
+
+        when q is (B, H, 2, E) and k,v are longer (B, H, 5, E)
+        the mask should be in that case
+
+        [[1, 1, 1, 0, 0],
+         [1, 1, 1, 1, 0],
+         (bottom left of triangular matrix)
+
+         but default takes
+        [[1, 0, 0, 0, 0],
+         [1, 1, 0, 0, 0],
+        (upper left triangular matrix)
+
+        A fix could be to use matrix but this has to be benchmarked and tested.
+
+        Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)
+        """
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
         att = att.masked_fill(self.bias[L : L + T, : L + T] == 0, float("-inf"))
 
         att = F.softmax(att, dim=-1)
         att = self.attn_dropout(att)
-        y = att @ v  # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
-        y = (
-            y.transpose(1, 2).contiguous().view(B, T, C)
-        )  # re-assemble all head outputs side by side
-
-        # output projection
-        y = self.resid_dropout(self.c_proj(y))
-        return y
+        return att @ v  # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
 
 
 class Block(nn.Module):
